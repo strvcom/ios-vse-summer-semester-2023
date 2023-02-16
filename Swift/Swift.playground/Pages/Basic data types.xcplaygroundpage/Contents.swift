@@ -3,30 +3,49 @@ import Foundation
 
 //: ### Strings
 example(of: "Strings") {
-    // Inferred string
-    // Print
-    // Type of
-    // Explicit string
+    let name = "Tim Cook"
+    print(name)
+    print(type(of: name))
+    let typedName: String = "Steve Jobs"
+    print(typedName)
+    
+    // typedName = "Different name"
 }
 //: ### Mutability
 example(of: "Mutability") {
-    // Mutate let string
-    // Mutate var string
+    var name = "Tim Cook"
+    
+    name = "Steve Jobs"
+    
+    print(name)
 }
 //: ### Numbers
 example(of: "Numbers") {
-    // Integer
-    // Inferred decimal and type of inferred decimal
-    // Float
+    let age: Int = 30
+    print(type(of: age))
+    
+    let height = 1.75
+    print(type(of: height))
+    let floatHeight: Float = 1.75
+    print(height)
+    print(floatHeight)
 }
 //: ### Boolean
 example(of: "Boolean") {
-    // Boolean
-    // Toggle boolean
+    var isOld: Bool = false
+    print(isOld)
+    isOld.toggle()
+    print(isOld)
 }
 //: ### Tuple
 example(of: "Tuple") {
-    // Tuple with explicit types
-    // Tuple without explicit types
+    typealias Tuple = (firstName: String, lastName: String)
+    let tuple: Tuple = ("Tim", "Cook")
+    
+    print(tuple)
+    print(tuple.firstName, tuple.lastName)
+    
+    let unnamedTuple: (String, String) = ("Tim", "Cook")
+    print(unnamedTuple.0, unnamedTuple.1)
 }
 //: [Next](@next)
