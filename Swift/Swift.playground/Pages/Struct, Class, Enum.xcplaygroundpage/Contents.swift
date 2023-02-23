@@ -222,21 +222,21 @@ example(of: "Enum with associated value") {
         case android(language: AndroidLanguages)
     }
     
-    enum iOSLanguages {
+    enum iOSLanguages: String {
         case swift, objectiveC
     }
     
-    enum AndroidLanguages {
+    enum AndroidLanguages: String {
         case java, kotlin
     }
     
     let platform = Platform.iOS(language: .swift)
     
     switch platform {
-    case .iOS:
-        print("We use iOS")
-    case .android:
-        print("We use Android")
+    case .iOS(let language):
+        print("We use iOS written in \(language)")
+    case .android(let language):
+        print("We use Android written in \(language)")
     }
 }
 
