@@ -9,7 +9,8 @@ example(of: "Struct declaration") {
         let lastName: String
     }
     
-    // Instantiate
+    let person = Person(firstName: "Tim", lastName: "Cook")
+    print(person)
 }
 
 example(of: "Struct with explicit initializer") {
@@ -17,10 +18,27 @@ example(of: "Struct with explicit initializer") {
         let firstName: String
         let lastName: String
         
-        // Explicit initializer
+        init() {
+            firstName = "Tim"
+            lastName = "Cook"
+        }
+        
+        init(firstName: String, lastName: String) {
+            self.firstName = firstName
+            self.lastName = lastName
+        }
     }
     
-    // Initialize
+    struct Person2 {
+        var firstName: String?
+        var lastName: String?
+    }
+
+    let person = Person()
+    print(person)
+    
+    let person2 = Person2()
+    print(person2)
 }
 
 example(of: "Class declaration") {
@@ -34,7 +52,8 @@ example(of: "Class declaration") {
         }
     }
     
-    // Instantiate
+    let person = Person(firstName: "Tim", lastName: "Cook")
+    print(person)
 }
 
 //: ### Value type vs. reference type
@@ -44,9 +63,12 @@ example(of: "Value type") {
         var lastName: String
     }
 
-    // Instantiate
-    // Copy instance
-    // Modify name
+    var person = Person(firstName: "Tim", lastName: "Cook")
+    var person2 = person
+    person.firstName = "Timothy"
+    
+    print(person)
+    print(person2)
 }
 
 example(of: "Reference type") {
@@ -60,9 +82,12 @@ example(of: "Reference type") {
         }
     }
     
-    // Instantiate
-    // Copy instance
-    // Modify name
+    var person = Person(firstName: "Tim", lastName: "Cook")
+    var person2 = person
+    person.firstName = "Timothy"
+    
+    print(person.firstName)
+    print(person2.firstName)
 }
 
 //: ### Mutating
@@ -72,19 +97,22 @@ example(of: "Mutating structure") {
         let lastName: String
     }
 
-    // Instantiate
-    // Try to mutate
+    let _ = Person1(firstName: "Tim", lastName: "Cook")
+    // person.firstName = "Timothy"
 
     struct Person2 {
         var firstName: String
         var lastName: String
         
-        // Mutating function
+        mutating func update() {
+            firstName = firstName.uppercased()
+        }
     }
     
-    // Instatntiate
-    // Mutate
-    // Mutate with mutating function
+    var person = Person2(firstName: "Tim", lastName: "Cook")
+    person.firstName = "Timothy"
+    person.update()
+    print(person)
 }
 
 example(of: "Mutating class") {
@@ -98,8 +126,8 @@ example(of: "Mutating class") {
         }
     }
     
-    // Instantiate
-    // Try to mutate
+    let _ = Person1(firstName: "Tim", lastName: "Cook")
+    // person.firstName = "Timothy"
 
     class Person2 {
         var firstName: String
@@ -110,12 +138,16 @@ example(of: "Mutating class") {
             self.lastName = lastName
         }
 
-        // Update function
+        func update() {
+            firstName = firstName.uppercased()
+        }
     }
     
-    // Instatntiate
-    // Mutate
-    // Mutate with mutating function
+    let person = Person2(firstName: "Tim", lastName: "Cook")
+    person.firstName = "Timothy"
+    print(person.firstName)
+    person.update()
+    print(person.firstName)
 }
 
 //: ### Inheritance
@@ -139,7 +171,8 @@ example(of: "Inheritance") {
         }
     }
     
-    // Instantiate
+    let uppercasePerson = UppercasedPerson()
+    print(uppercasePerson.firstName)
 }
 
 example(of: "Struct inheritance") {
@@ -157,24 +190,54 @@ example(of: "Struct inheritance") {
 //: ## Enumerations
 //: ### Declaration
 example(of: "Enum declaration") {
-    // Enum with iOS languages
-    // Assign to variable
-    // Switch statement
+    enum Languages {
+        case swift
+        case objectiveC
+    }
+    
+    let language: Languages = .swift
+    print(language)
 }
 
 //: ### Enum with raw value
 example(of: "Enum with raw value") {
-    // Enum with iOS languages with raw value
-    // Initialize with raw value
-    // Unknown raw value
+    enum Languages: String {
+        case swift = "swift"
+        case objectiveC = "objective-C"
+    }
+    
+    let language: Languages = .objectiveC
+    print(language.rawValue)
+    
+    let rawString = "objective-C"
+    //let rawString = "objective-CC"
+    let lang = Languages(rawValue: rawString)
+    print(lang.debugDescription)
 }
 
 //: ### Enum with associated value
 example(of: "Enum with associated value") {
-    // Enum with languages
-    // Enum with platforms
-    // Assign to variable
-    // Switch
+    enum Platform {
+        case iOS(language: iOSLanguages)
+        case android(language: AndroidLanguages)
+    }
+    
+    enum iOSLanguages: String {
+        case swift, objectiveC
+    }
+    
+    enum AndroidLanguages: String {
+        case java, kotlin
+    }
+    
+    let platform = Platform.iOS(language: .swift)
+    
+    switch platform {
+    case .iOS(let language):
+        print("We use iOS written in \(language)")
+    case .android(let language):
+        print("We use Android written in \(language)")
+    }
 }
 
 //: [Next](@next)

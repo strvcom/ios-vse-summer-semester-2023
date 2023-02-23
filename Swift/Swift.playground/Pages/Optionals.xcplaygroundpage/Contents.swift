@@ -100,7 +100,7 @@ example(of: "Implicitly unwrapped optional") {
     
     age = 30
     
-    print(age)
+    print(age.debugDescription)
     print(type(of: age))
     
     if age < 25 {
