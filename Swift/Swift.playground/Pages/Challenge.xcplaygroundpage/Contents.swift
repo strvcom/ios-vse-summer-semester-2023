@@ -28,9 +28,71 @@
 //: **What would your total score be for the given input if everything goes exactly according to your strategy guide?**
 import Foundation
 
+enum Symbol: Int {
+    case rock = 1
+    case paper = 2
+    case scissors = 3
+    
+    init?(data: String) {
+        switch data {
+        case "A", "X":
+            self = .rock
+        case "B", "Y":
+            self = .paper
+        case "C", "Z":
+            self = .scissors
+        default:
+            return nil
+        }
+    }
+}
+
+enum Result: Int {
+    case win = 6
+    case draw = 3
+    case lost = 0
+}
+
+struct Round {
+    let me: Symbol
+    let opponent: Symbol
+    
+    var result: Result {
+        switch (me, opponent) {
+        case (.rock, .scissors), (.paper, .rock), (.scissors, .paper):
+            return .win
+        case (.rock, .rock), (.paper, .paper), (.scissors, .scissors):
+            return .draw
+        default:
+            return .lost
+        }
+    }
+    
+    init?(data: String) {
+        let components = data.components(separatedBy: " ")
+        
+        guard components.count == 2 else {
+            return nil
+        }
+        
+        guard
+            let opponent = Symbol(data: components[0]),
+            let me = Symbol(data: components[1])
+        else {
+            return nil
+        }
+        
+        self.me = me
+        self.opponent = opponent
+    }
+}
+
 func countPoints(for input: [String]) -> Int {
-    // TODO: REPLACE WITH YOUR IMPLEMENTATION
-    return 0
+    let rounds = input.compactMap(Round.init(data:))
+    
+    return rounds
+        .map { $0.me.rawValue + $0.result.rawValue }
+        .reduce(0, +)
 }
 
 let lines = Reader.readLines(from: "input.txt")
