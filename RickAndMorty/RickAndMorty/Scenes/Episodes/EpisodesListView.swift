@@ -2,37 +2,38 @@
 //  EpisodesListView.swift
 //  RickAndMorty
 //
-//  Created by Jan Kaltoun on 01.03.2023.
+//  Created by Jan Kaltoun on 29.01.2022.
 //
 
 import SwiftUI
 
 struct EpisodesListView: View {
-    let episodes: [Episode] = (1...9).map { index in
-        Episode(
-            id: index,
-            name: "Episode #\(index)",
-            code: "S01E\(index)",
-            airDate: "December \(index), 2013"
-        )
-    }
+    
+    @State var episodes: [Episode] = Episode.mockedEpisodes
     
     var body: some View {
         ZStack {
             BackgroundGradientView()
-            
-            ScrollView {
+            content
+        }
+        .navigationTitle("Episodes")
+    }
+    
+    @ViewBuilder var content: some View {
+        ScrollView {
+            Group {
                 LazyVStack {
                     ForEach(episodes) { episode in
                         EpisodesListItemView(episode: episode)
                     }
                 }
-                .padding(.horizontal, 8)
             }
+            .padding(.horizontal, 8)
         }
     }
 }
 
+// MARK: - Previews
 struct EpisodesListView_Previews: PreviewProvider {
     static var previews: some View {
         EpisodesListView()
