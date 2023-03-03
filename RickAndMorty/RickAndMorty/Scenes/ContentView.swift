@@ -22,8 +22,7 @@ struct ContentView: View {
                      }
 
                      NavigationView {
-                         Text("EPISODES")
-                             .font(.appItemLargeTitle)
+                         EpisodesListView()
                      }
                      .navigationViewStyle(StackNavigationViewStyle())
                      .tabItem {
