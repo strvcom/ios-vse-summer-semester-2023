@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct EpisodesListView: View {
-    
     @State var episodes: [Episode] = Episode.mockedEpisodes
     
     var body: some View {
@@ -24,7 +23,9 @@ struct EpisodesListView: View {
             Group {
                 LazyVStack {
                     ForEach(episodes) { episode in
-                        EpisodesListItemView(episode: episode)
+                        NavigationLink(destination: EpisodeDetailView(episode: episode)) {
+                            EpisodesListItemView(episode: episode)
+                        }
                     }
                 }
             }
