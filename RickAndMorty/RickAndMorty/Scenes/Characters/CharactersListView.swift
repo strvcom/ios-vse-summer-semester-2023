@@ -26,17 +26,21 @@ struct CharactersListView: View {
                 case .list:
                     LazyVStack(alignment: .leading, spacing: 12) {
                         ForEach(characters) { character in
-                            CharacatersListItemView(character: character)
+                            NavigationLink(destination: CharacterDetailView(character: character)) {
+                                CharacatersListItemView(character: character)
+                            }
                         }
                     }
                     .padding(.horizontal, 16)
                     
                 case .grid:
                     LazyVGrid(columns: gridItems, spacing: 10) {
-                            ForEach(characters) { character in
+                        ForEach(characters) { character in
+                            NavigationLink(destination: CharacterDetailView(character: character)) {
                                 CharactersGridItemView(character: character)
                             }
                         }
+                    }
                     .padding(.horizontal, 10)
                 }
             }
