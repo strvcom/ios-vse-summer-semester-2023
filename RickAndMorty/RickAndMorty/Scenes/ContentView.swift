@@ -10,52 +10,50 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-                     NavigationView {
-                         Text("CHARACTERS")
-                             .font(.appItemLargeTitle)
-                     }
-                     .navigationViewStyle(StackNavigationViewStyle())
-                     .tabItem {
-                         Image(systemName: "person.2")
+            NavigationView {
+                CharactersListView()
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+            .tabItem {
+                Image(systemName: "person.2")
 
-                         Text("Characters")
-                     }
+                Text("Characters")
+            }
 
-                     NavigationView {
-                         Text("EPISODES")
-                             .font(.appItemLargeTitle)
-                     }
-                     .navigationViewStyle(StackNavigationViewStyle())
-                     .tabItem {
-                         Image(systemName: "film")
+            NavigationView {
+                EpisodesListView()
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+            .tabItem {
+                Image(systemName: "film")
 
-                         Text("Episodes")
-                     }
+                Text("Episodes")
+            }
 
-                     NavigationView {
-                         Text("LOCATIONS")
-                             .font(.appItemLargeTitle)
-                     }
-                     .navigationViewStyle(StackNavigationViewStyle())
-                     .tabItem {
-                         Image(systemName: "globe.europe.africa")
+            NavigationView {
+                Text("LOCATIONS")
+                    .font(.appItemLargeTitle)
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+            .tabItem {
+                Image(systemName: "globe.europe.africa")
 
-                         Text("Locations")
-                     }
+                Text("Locations")
+            }
 
-                     NavigationView {
-                         Text("LIKES")
-                             .font(.appItemLargeTitle)
-                     }
-                     .navigationViewStyle(StackNavigationViewStyle())
-                     .tabItem {
-                         Image(systemName: "heart.text.square")
+            NavigationView {
+                Text("LIKES")
+                    .font(.appItemLargeTitle)
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+            .tabItem {
+                Image(systemName: "heart.text.square")
 
-                         Text("Likes")
-                     }
-                 }
-                 .foregroundColor(.appTextBody)
-                 .preferredColorScheme(.none)
+                Text("Likes")
+            }
+        }
+        .foregroundColor(.appTextBody)
+        .preferredColorScheme(.none)
     }
 }
 

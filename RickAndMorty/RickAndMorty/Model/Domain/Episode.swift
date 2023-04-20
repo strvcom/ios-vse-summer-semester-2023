@@ -59,5 +59,35 @@ extension Episode {
             1, 2
         ]
     )
+    
+    static let mockedEpisodes: [Episode] = [
+        .init(
+            id: 1,
+            name: "Pilot",
+            code: "S01E01",
+            airDate: Date(),
+            characterIds: [
+                1, 2
+            ]
+        ),
+        .init(
+            id: 2,
+            name: "Planet of Ricks",
+            code: "S01E02",
+            airDate: Date(),
+            characterIds: [
+                1, 2
+            ]
+        ),
+        .init(
+            id: 3,
+            name: "Marthian",
+            code: "S01E03",
+            airDate: Date(),
+            characterIds: [
+                1, 2
+            ]
+        )
+    ]
 }
 #endif
