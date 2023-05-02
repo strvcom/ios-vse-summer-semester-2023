@@ -8,23 +8,40 @@
 import SwiftUI
 
 struct CharacterDetailView: View {
-    let character: Character
-
+    
+    @StateObject var viewModel: CharacterDetailViewModel
+    
     var body: some View {
         ZStack(alignment: .topLeading) {
             BackgroundGradientView()
 
             ScrollView {
                 VStack(spacing: 16) {
-                    makeImage(url: character.imageUrl)
-
-                    makeInfo(character: character)
-
+                    switch viewModel.state {
+                    case .initial:
+                        ProgressView()
+                    case .loading:
+                        ProgressView()
+                    case .fetched:
+                        if let character = viewModel.character {
+                            makeImage(url: character.imageUrl)
+                            makeInfo(character: character)
+                        }
+                        
+                    case .failed:
+                        Text("Sorry character fetch failed")
+                    }
+                    
                     makeEpisodes()
                 }
             }
         }
-        .navigationTitle(character.name)
+        .navigationTitle(viewModel.character?.name ?? "")
+        .onFirstAppear {
+            Task {
+                await viewModel.fetch()
+            }
+        }
     }
 }
 
@@ -86,7 +103,7 @@ private extension CharacterDetailView {
                 .font(.appSectionTitle)
                 .foregroundColor(.appTextSectionTitle)
 
-            ForEach(Episode.mockedEpisodes) { episode in
+            ForEach(viewModel.episodes) { episode in
                 NavigationLink(destination: EpisodeDetailView(episode: episode)) {
                     makeEpisodeRow(episode: episode)
                 }
@@ -116,7 +133,7 @@ private extension CharacterDetailView {
 struct CharacterDetailView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            CharacterDetailView(character: .mock)
+            CharacterDetailView(viewModel: CharacterDetailViewModel(id: 1))
         }
     }
 }

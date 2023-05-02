@@ -44,7 +44,7 @@ private extension EpisodeDetailView {
                 .padding(.horizontal, 8)
 
             ForEach(Character.characters) { character in
-                NavigationLink(destination: CharacterDetailView(character: character)) {
+                NavigationLink(destination: CharacterDetailView(viewModel: .init())) {
                     makeCharacterRow(character: character)
                 }
             }

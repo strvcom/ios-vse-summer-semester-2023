@@ -11,7 +11,7 @@ struct ContentView: View {
     var body: some View {
         TabView {
             NavigationView {
-                CharactersListView()
+                CharactersListView(viewModel: CharacterListViewModel())
             }
             .navigationViewStyle(StackNavigationViewStyle())
             .tabItem {

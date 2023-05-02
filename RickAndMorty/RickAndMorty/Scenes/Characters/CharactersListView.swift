@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CharactersListView: View {
-    let characters: [Character] = Character.characters
+    
+    @StateObject var viewModel = CharacterListViewModel()
+    
     @State private var displayMode: DisplayMode = .list
     
     let gridItems: [GridItem] = [
@@ -16,32 +18,46 @@ struct CharactersListView: View {
         GridItem(.flexible(), spacing: 10),
         GridItem(.flexible(), spacing: 10)
     ]
+
+    func makeList(from characters: [Character]) -> some View {
+        LazyVStack(alignment: .leading, spacing: 12) {
+            ForEach(characters) { character in
+                NavigationLink(destination: CharacterDetailView(viewModel: CharacterDetailViewModel(id: character.id))) {
+                    CharacatersListItemView(character: character)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+    }
+    
+    func makeGrid(from characters: [Character]) -> some View {
+        LazyVGrid(columns: gridItems, spacing: 10) {
+            ForEach(characters) { character in
+                NavigationLink(destination: CharacterDetailView(viewModel: CharacterDetailViewModel(id: character.id))) {
+                    CharactersGridItemView(character: character)
+                }
+            }
+        }
+        .padding(.horizontal, 10)
+    }
     
     var body: some View {
         ZStack {
             BackgroundGradientView()
             
             ScrollView {
-                switch displayMode {
-                case .list:
-                    LazyVStack(alignment: .leading, spacing: 12) {
-                        ForEach(characters) { character in
-                            NavigationLink(destination: CharacterDetailView(character: character)) {
-                                CharacatersListItemView(character: character)
-                            }
-                        }
+                switch viewModel.state {
+                case .initial, .loading:
+                    ProgressView()
+                case .fetched(let characters):
+                    switch displayMode {
+                    case .list:
+                        makeList(from: characters)
+                    case .grid:
+                        makeGrid(from: characters)
                     }
-                    .padding(.horizontal, 16)
-                    
-                case .grid:
-                    LazyVGrid(columns: gridItems, spacing: 10) {
-                        ForEach(characters) { character in
-                            NavigationLink(destination: CharacterDetailView(character: character)) {
-                                CharactersGridItemView(character: character)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 10)
+                case .failed:
+                    Text("Something went wrong 😕")
                 }
             }
         }
@@ -53,6 +69,10 @@ struct CharactersListView: View {
                 } label: {
                     displayMode.image
                 }
+            }
+        }.onFirstAppear {
+            Task {
+                await viewModel.fetch()
             }
         }
     }
