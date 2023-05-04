@@ -27,6 +27,21 @@ struct CharacterLocation {
     }
 }
 
+extension CharacterLocation: Decodable {
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        name = try container.decode(String.self, forKey: .name)
+        
+        if let url = try? container.decode(URL?.self, forKey: .url) {
+            locationId = Int(url.lastPathComponent)
+        } else {
+            locationId = nil
+        }
+    }
+}
+
 // MARK: - Conformances
 extension CharacterLocation: Equatable {}
 

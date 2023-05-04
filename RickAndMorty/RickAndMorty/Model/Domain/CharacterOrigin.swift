@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CharacterOrigin {
+struct CharacterOrigin: Decodable {
     let name: String
     let locationId: Int?
     
