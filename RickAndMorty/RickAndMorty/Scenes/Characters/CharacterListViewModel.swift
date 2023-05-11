@@ -87,6 +87,29 @@ enum APIError: Error {
     case invalidUrlComponents
 }
 
+
+enum CharacterEndpoint: Endpoint {
+    
+    case getCharacters(page: Int?)
+    
+    var path: String {
+        switch self {
+        case .getCharacters:
+            return "character"
+        }
+    }
+    
+    var urlParameters: [String : String] {
+        switch self {
+        case .getCharacters(let page?):
+            return ["page": String(page)]
+        case .getCharacters:
+            return [:]
+        }
+        
+    }
+}
+
 class APIManager: APIManaging {
 
     lazy var session: URLSession = {
@@ -104,6 +127,8 @@ class APIManager: APIManaging {
         
         let httpResponse = response as? HTTPURLResponse
         
+//        debugPrint("Finished request: \(response)")
+                
         guard let status =  httpResponse?.statusCode, (200...299).contains(status) else {
             throw APIError.unaceptableStatusCode
         }
@@ -125,8 +150,30 @@ struct Response<T: Decodable>: Decodable {
     struct Info: Decodable {
         let pages: Int
         let count: Int
-        let next: String?
-        let prev: String?
+        let next: Int?
+        
+        enum CodingKeys: String, CodingKey {
+            case pages
+            case count
+            case next
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            
+            count = try container.decode(Int.self, forKey: .count)
+            pages = try container.decode(Int.self, forKey: .pages)
+            
+            if
+                let nextPageUrl = try? container.decode(URL.self, forKey: .next),
+                let nextPageNumberString = nextPageUrl.valueOf(queryParameter: "page"),
+                let nextPageNumber = Int(nextPageNumberString)
+            {
+                self.next = nextPageNumber
+            } else {
+                self.next = nil
+            }
+        }
     }
     
     let info: Info
@@ -134,52 +181,69 @@ struct Response<T: Decodable>: Decodable {
 }
 
 
-enum CharacterEndpoint: Endpoint {
-    
-    case getCharacters
-    
-    var path: String {
-        switch self {
-        case .getCharacters:
-            return "character"
-        }
-    }
-}
+
 
 @MainActor final class CharacterListViewModel: ObservableObject {
 
     enum State {
         case initial
         case loading
-        case fetched(characters: [Character])
+        case fetched(loadingMore: Bool)
         case failed
     }
     
+    @Injected private var apiManager: APIManaging
+    
+    private var currentPageInfo: Response<[Character]>.Info?
+    
+    @Published var characters: [Character] = []
     @Published var state: State = .initial
     
-    func fetch() async {
+    
+    func fetchMoreIfNeeded(for character: Character) async {
+        
+        guard character == characters.last else {
+            return
+        }
+        
+        guard let page = currentPageInfo?.next else {
+            return
+        }
+        
+        state = .fetched(loadingMore: true)
+        
+        await fetch(page: page)
+    }
+    
+    
+    func load() async {
         state = .loading
-
-        
-        let url = Constants.baseAPIUrl.appendingPathComponent("character")
-        
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "GET"
+        await fetch()
+    }
+    
+    
+    func fetch(page: Int? = nil) async {
         
         do {
-        
-//            let (data, response) = try await URLSession.shared.data(for: urlRequest)
-//
-//            let decoder = JSONDecoder()
-//            let paginatedResponse = try decoder.decode(Response<[Character]>.self, from: data)
-//
-//            let characters = paginatedResponse.results
             
-            let manager = APIManager()
-            let resp: Response<[Character]> = try await manager.request(endpoint: CharacterEndpoint.getCharacters)
+            let endpoint = CharacterEndpoint.getCharacters(page: page)
             
-            state = .fetched(characters: resp.results)
+            let response: Response<[Character]> = try await apiManager.request(endpoint: endpoint)
+            
+            currentPageInfo = response.info
+            characters += response.results
+            
+            state = .fetched(loadingMore: false)
         } catch {
+            
+            if let error = error as? URLError, error.code == .cancelled {
+                Logger.log("URL request was cancelled", .info)
+                
+                state = .fetched(loadingMore: false)
+                
+                return
+            }
+            
             print(error)
             state = .failed
         }

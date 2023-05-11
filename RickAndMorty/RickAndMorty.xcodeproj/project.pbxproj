@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		282480372A03B6B80026AE99 /* DIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282480362A03B6B80026AE99 /* DIContainer.swift */; };
 		2873095E29FA739A00FA10EF /* CharacterListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2873095D29FA739A00FA10EF /* CharacterListViewModel.swift */; };
 		2873096029FA790F00FA10EF /* CharacterDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2873095F29FA790F00FA10EF /* CharacterDetailViewModel.swift */; };
 		2FF6108727A5A74E000D4A8B /* RickAndMortyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FF6108627A5A74E000D4A8B /* RickAndMortyApp.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		282480362A03B6B80026AE99 /* DIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DIContainer.swift; sourceTree = "<group>"; };
 		2873095D29FA739A00FA10EF /* CharacterListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterListViewModel.swift; sourceTree = "<group>"; };
 		2873095F29FA790F00FA10EF /* CharacterDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailViewModel.swift; sourceTree = "<group>"; };
 		2FF6108327A5A74E000D4A8B /* RickAndMorty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RickAndMorty.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -208,6 +210,7 @@
 				2FF610D527A5EDDD000D4A8B /* OnFirstAppearViewModifier.swift */,
 				2FF610F827A61468000D4A8B /* UINavigationController+BackButton.swift */,
 				2FF6110927A6E1AA000D4A8B /* Alignment+Custom.swift */,
+				282480362A03B6B80026AE99 /* DIContainer.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -406,6 +409,7 @@
 				4F9D77E629C3273B007C9F33 /* CharacterDetailView.swift in Sources */,
 				A06BA90629B9F5CE0081C803 /* CharacatersListItemView.swift in Sources */,
 				2FF610C727A5E010000D4A8B /* PaginationInfo.swift in Sources */,
+				282480372A03B6B80026AE99 /* DIContainer.swift in Sources */,
 				5879FDEB290931A700552583 /* NavigationRouter.swift in Sources */,
 				2FF6108727A5A74E000D4A8B /* RickAndMortyApp.swift in Sources */,
 				5879FDE829081E3200552583 /* TabRoute.swift in Sources */,

@@ -19,22 +19,28 @@ struct CharactersListView: View {
         GridItem(.flexible(), spacing: 10)
     ]
 
-    func makeList(from characters: [Character]) -> some View {
+    func makeList() -> some View {
         LazyVStack(alignment: .leading, spacing: 12) {
-            ForEach(characters) { character in
+            ForEach(viewModel.characters) { character in
                 NavigationLink(destination: CharacterDetailView(viewModel: CharacterDetailViewModel(id: character.id))) {
                     CharacatersListItemView(character: character)
+                }
+                .task {
+                    await viewModel.fetchMoreIfNeeded(for: character)
                 }
             }
         }
         .padding(.horizontal, 16)
     }
     
-    func makeGrid(from characters: [Character]) -> some View {
+    func makeGrid() -> some View {
         LazyVGrid(columns: gridItems, spacing: 10) {
-            ForEach(characters) { character in
+            ForEach(viewModel.characters) { character in
                 NavigationLink(destination: CharacterDetailView(viewModel: CharacterDetailViewModel(id: character.id))) {
                     CharactersGridItemView(character: character)
+                }
+                .task {
+                    await viewModel.fetchMoreIfNeeded(for: character)
                 }
             }
         }
@@ -49,12 +55,16 @@ struct CharactersListView: View {
                 switch viewModel.state {
                 case .initial, .loading:
                     ProgressView()
-                case .fetched(let characters):
+                case .fetched(let loadingMore):
                     switch displayMode {
                     case .list:
-                        makeList(from: characters)
+                        makeList()
                     case .grid:
-                        makeGrid(from: characters)
+                        makeGrid()
+                    }
+                    
+                    if loadingMore {
+                        ProgressView()
                     }
                 case .failed:
                     Text("Something went wrong 😕")
@@ -72,7 +82,7 @@ struct CharactersListView: View {
             }
         }.onFirstAppear {
             Task {
-                await viewModel.fetch()
+                await viewModel.load()
             }
         }
     }
